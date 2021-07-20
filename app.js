@@ -1,10 +1,20 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
-const { models: { User }} = require('./db');
+const { models: { User, Note }} = require('./db');
 const path = require('path');
 const secret = process.env.SECRET_ENV;
+app.get('/api/users/:id/notes', async (req, res, next)=> {
+  try{
+    const user = await User.findByPk(req.params.id);
+    const userNotes = await user.getNotes();
+    // res.json(userNotes);
 
+  res.send(userNotes);
+  }catch(ex){
+
+  }
+})
 app.get('/', (req, res)=> {
   console.log('secret', secret)
 res.sendFile(path.join(__dirname, 'index.html'))});
